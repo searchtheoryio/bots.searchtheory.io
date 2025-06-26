@@ -152,7 +152,7 @@ export default async function handler(
 
   // Revalidate static paths.
   res.revalidate("/");
-  for (let bot of botOverview) res.revalidate(`/bots/${bot.detail.id}`);
+  for (const bot of botOverview) res.revalidate(`/bots/${bot.detail.id}`);
 
   res.status(200).json({ status: "ok" });
 }
