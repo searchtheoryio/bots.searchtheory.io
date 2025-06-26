@@ -25,7 +25,6 @@ export type SourceOverviewItem = {
   lastChange?: string;
 };
 
-const BLOB_CACHE_TTL = 60 * 60;
 const BLOB_ENV = process.env.VERCEL_TARGET_ENV ?? "development";
 const BLOB_HOST = `https://${process.env.BLOB_HOST}.public.blob.vercel-storage.com`;
 
@@ -34,12 +33,7 @@ const BLOB_HOST = `https://${process.env.BLOB_HOST}.public.blob.vercel-storage.c
  * @returns {Promise<SourceOverview>}
  */
 export async function getSourceOverview(): Promise<SourceOverview> {
-  return (
-    await fetch(`${BLOB_HOST}/${BLOB_ENV}/sources.json`, {
-      cache: "force-cache",
-      next: { tags: ["source-overview"], revalidate: BLOB_CACHE_TTL },
-    })
-  ).json();
+  return (await fetch(`${BLOB_HOST}/${BLOB_ENV}/sources.json`)).json();
 }
 
 /**
@@ -65,12 +59,7 @@ export async function putSourceOverview(
  * @returns {Promise<BotOverview>}
  */
 export async function getBotOverview(): Promise<BotOverview> {
-  return (
-    await fetch(`${BLOB_HOST}/${BLOB_ENV}/bots.json`, {
-      cache: "force-cache",
-      next: { tags: ["bot-overview"], revalidate: BLOB_CACHE_TTL },
-    })
-  ).json();
+  return (await fetch(`${BLOB_HOST}/${BLOB_ENV}/bots.json`)).json();
 }
 
 /**

@@ -150,5 +150,9 @@ export default async function handler(
   const botOverview = await buildBotOverview(sourceOverview);
   await putBotOverview(botOverview);
 
+  // Revalidate static paths.
+  res.revalidate("/");
+  for (let bot of botOverview) res.revalidate(`/bots/${bot.detail.id}`);
+
   res.status(200).json({ status: "ok" });
 }
