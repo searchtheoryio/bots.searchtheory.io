@@ -1,4 +1,8 @@
-import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
+import type {
+  InferGetStaticPropsType,
+  GetStaticPaths,
+  GetStaticProps,
+} from "next";
 
 import Head from "next/head";
 
@@ -9,7 +13,20 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDate } from "@/lib/utils";
 
-export const getServerSideProps: GetServerSideProps<{
+export const getStaticPaths = (async () => {
+  //
+  const botOverview = await getBotOverview();
+  return {
+    fallback: false,
+    paths: botOverview.map((bot) => ({
+      params: {
+        id: bot.detail.id,
+      },
+    })),
+  };
+}) satisfies GetStaticPaths;
+
+export const getStaticProps: GetStaticProps<{
   bot: BotOverviewItem;
 }> = async (context) => {
   //
@@ -21,7 +38,7 @@ export const getServerSideProps: GetServerSideProps<{
 
 export default function Home({
   bot,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <>
       <Head>

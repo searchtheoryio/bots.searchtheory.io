@@ -1,4 +1,4 @@
-import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import type { GetStaticProps, InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import Link from "next/link";
 
@@ -18,7 +18,7 @@ import {
 import { getBotOverview } from "@/lib/storage";
 import { formatDate } from "@/lib/utils";
 
-export const getServerSideProps: GetServerSideProps<{
+export const getStaticProps: GetStaticProps<{
   bots: Awaited<ReturnType<typeof getBotOverview>>;
 }> = async () => {
   //
@@ -37,7 +37,7 @@ export const getServerSideProps: GetServerSideProps<{
 
 export default function Index({
   bots,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <>
       <Head>
