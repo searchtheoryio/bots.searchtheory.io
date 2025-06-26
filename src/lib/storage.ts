@@ -25,7 +25,9 @@ export type SourceOverviewItem = {
   lastChange?: string;
 };
 
-const BLOB_ENV = process.env.VERCEL_TARGET_ENV ?? "development";
+let BLOB_ENV = "development";
+if (process.env.VERCEL_TARGET_ENV === "production") BLOB_ENV = "production";
+
 const BLOB_HOST = `https://${process.env.BLOB_HOST}.public.blob.vercel-storage.com`;
 
 /**
