@@ -46,8 +46,8 @@ export default function Index({
   const doFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilteredBots(
       bots.filter((bot) => {
-        let botName = bot.detail.name.toLowerCase();
-        let searchTerm = event.target.value.toLowerCase();
+        const botName = bot.detail.name.toLowerCase();
+        const searchTerm = event.target.value.toLowerCase();
         return botName.includes(searchTerm);
       })
     );
