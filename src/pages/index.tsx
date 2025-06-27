@@ -80,12 +80,8 @@ export default function Index({
                   <TableHead className="font-bold">
                     User Agent Patterns
                   </TableHead>
-                  <TableHead className="font-bold text-right">
-                    IP Prefixes
-                  </TableHead>
-                  <TableHead className="font-bold text-right">
-                    Latest IP Change
-                  </TableHead>
+                  <TableHead className="font-bold">Latest Fetch</TableHead>
+                  <TableHead className="font-bold">Latest Change</TableHead>
                   <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
@@ -111,10 +107,18 @@ export default function Index({
                       ))}
                     </TableCell>
                     <TableCell className="text-right">
-                      {bot.latestPrefixes.length}
+                      {bot?.lastFetch ? (
+                        <>{formatDate(bot.lastFetch.timestamp)}</>
+                      ) : (
+                        <>&ndash;</>
+                      )}
                     </TableCell>
                     <TableCell className="text-right">
-                      {bot.lastChange ? <>{formatDate(bot.lastChange)}</> : "-"}
+                      {bot.lastChange ? (
+                        <>{formatDate(bot.lastChange)}</>
+                      ) : (
+                        <>&ndash;</>
+                      )}
                     </TableCell>
                     <TableCell className="text-right">
                       <Button variant="outline" asChild>
