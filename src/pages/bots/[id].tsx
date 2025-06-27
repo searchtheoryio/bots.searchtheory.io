@@ -33,7 +33,7 @@ export const getStaticProps: GetStaticProps<{
   const botOverview = await getBotOverview();
   const bot = botOverview.find((b) => b.detail.id === context?.params?.id);
   if (!bot) return { notFound: true };
-  return { props: { bot } };
+  return { props: { bot }, revalidate: 3600 };
 };
 
 export default function Home({

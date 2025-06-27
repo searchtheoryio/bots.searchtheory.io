@@ -34,7 +34,7 @@ export const getStaticProps: GetStaticProps<{
     return 0;
   });
 
-  return { props: { bots } };
+  return { props: { bots }, revalidate: 3600 };
 };
 
 export default function Index({
