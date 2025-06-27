@@ -106,14 +106,14 @@ export default function Index({
                         </div>
                       ))}
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell>
                       {bot?.lastFetch ? (
                         <>{formatDate(bot.lastFetch.timestamp)}</>
                       ) : (
                         <>&ndash;</>
                       )}
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell>
                       {bot.lastChange ? (
                         <>{formatDate(bot.lastChange)}</>
                       ) : (
