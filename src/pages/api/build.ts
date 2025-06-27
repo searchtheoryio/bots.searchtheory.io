@@ -83,6 +83,8 @@ async function buildSourceOverview(): Promise<SourceOverview> {
       if (lastSourceInfo) {
         if (lastSourceInfo?.fetchInfo.checksum !== fetchInfo.checksum) {
           lastChange = new Date().toISOString();
+        } else if (lastSourceInfo?.fetchInfo) {
+          lastChange = lastSourceInfo.fetchInfo.timestamp;
         }
       }
 
