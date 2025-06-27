@@ -9,7 +9,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export function formatDate(str: string) {
   const dateObj = dayjs(str);
-  return dateObj.format("MMM D, YYYY");
+  return dateObj.format("MMM D @ HH:mm");
 }
 
 /**
