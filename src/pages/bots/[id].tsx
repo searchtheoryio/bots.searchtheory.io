@@ -11,7 +11,6 @@ import { Bot, getBots } from "@/lib/github";
 import { Page } from "@/components/page";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatDate } from "@/lib/utils";
 
 export const getStaticPaths = (async () => {
   //
