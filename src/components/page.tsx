@@ -38,6 +38,11 @@ export const Page = ({ children }: PropsWithChildren) => {
                 <Link href="/about">About</Link>
               </NavigationMenuLink>
             </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink asChild>
+                <Link href="/data">Data</Link>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
         <NavigationMenu className="ml-auto">
@@ -47,7 +52,7 @@ export const Page = ({ children }: PropsWithChildren) => {
                 <Button variant="outline">
                   <Link
                     target="_blank"
-                    href="https://github.com/searchtheoryio/bots.searchtheory.io"
+                    href="https://github.com/searchtheoryio/signatures"
                   >
                     Edit on GitHub
                   </Link>

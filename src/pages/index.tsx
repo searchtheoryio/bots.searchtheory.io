@@ -1,11 +1,16 @@
+import { useState } from "react";
+
 import type { GetStaticProps, InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import Link from "next/link";
 
-import { BookIcon, ExternalLinkIcon } from "lucide-react";
+import { BookIcon, ExternalLinkIcon, MegaphoneIcon } from "lucide-react";
 
-import { Page } from "@/components/page";
+import { getBots } from "@/lib/github";
+
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Page } from "@/components/page";
 import {
   Table,
   TableBody,
@@ -14,23 +19,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-import { getBotOverview } from "@/lib/storage";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { formatDate } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
-import { useState } from "react";
 
 export const getStaticProps: GetStaticProps<{
-  bots: Awaited<ReturnType<typeof getBotOverview>>;
+  bots: Awaited<ReturnType<typeof getBots>>;
 }> = async () => {
   //
   // Get the latest bot info.
-  let bots = await getBotOverview();
+  let bots = await getBots();
 
   // Sort alphabetically.
   bots = bots.sort((a, b) => {
-    if (a.detail.name < b.detail.name) return -1;
-    if (a.detail.name > b.detail.name) return 1;
+    if ((a.prefixesCreationTime ?? "") > (b.prefixesCreationTime ?? "")) return -1; // prettier-ignore
+    if ((a.prefixesCreationTime ?? "") < (b.name ?? "")) return 1;
     return 0;
   });
 
@@ -46,7 +48,7 @@ export default function Index({
   const doFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilteredBots(
       bots.filter((bot) => {
-        const botName = bot.detail.name.toLowerCase();
+        const botName = bot.name.toLowerCase();
         const searchTerm = event.target.value.toLowerCase();
         return botName.includes(searchTerm);
       })
@@ -59,11 +61,22 @@ export default function Index({
         <title>{`bot signature tracker - bots.searchtheory.io`}</title>
       </Head>
       <Page>
-        <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight text-balance mt-6">
+        <Alert>
+          <MegaphoneIcon />
+          <AlertTitle>New: Data Feeds</AlertTitle>
+          <AlertDescription>
+            <p>All bot signature + IP data is now on GitHub.</p>
+            <Link className="underline" href="/data">
+              Find out more &raquo;
+            </Link>
+          </AlertDescription>
+        </Alert>
+
+        <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight text-balance mt-9">
           Bot Signature Tracker
         </h1>
-        <p className="mt-3 mb-6 text-muted-foreground text-lg">
-          Open detection signatures for important bots.
+        <p className="mt-1 mb-6 text-muted-foreground text-lg">
+          Open source bot detection signatures.
         </p>
 
         <Input placeholder="Search for a bot..." onChange={doFilter} />
@@ -80,8 +93,8 @@ export default function Index({
                   <TableHead className="font-bold">
                     User Agent Patterns
                   </TableHead>
-                  <TableHead className="font-bold">Latest Fetch</TableHead>
-                  <TableHead className="font-bold">Latest Change</TableHead>
+                  <TableHead>Total Prefixes</TableHead>
+                  <TableHead>Latest Change</TableHead>
                   <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
@@ -89,15 +102,12 @@ export default function Index({
                 {filteredBots.map((bot, botIndex) => (
                   <TableRow key={`bot_${botIndex}`}>
                     <TableCell>
-                      <Link
-                        className="underline"
-                        href={`/bots/${bot.detail.id}`}
-                      >
-                        {bot.detail.name}
+                      <Link className="underline" href={`/bots/${bot.id}`}>
+                        {bot.name}
                       </Link>
                     </TableCell>
                     <TableCell>
-                      {bot.detail.variations.map((variation, variationId) => (
+                      {bot.variations.map((variation, variationId) => (
                         <div
                           className="relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm [&:not(:first-child)]:mt-2"
                           key={`variation_${variationId}`}
@@ -106,30 +116,24 @@ export default function Index({
                         </div>
                       ))}
                     </TableCell>
+                    <TableCell>{bot.prefixes.length}</TableCell>
                     <TableCell>
-                      {bot?.lastFetch ? (
-                        <>{formatDate(bot.lastFetch.timestamp)}</>
-                      ) : (
-                        <>&ndash;</>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {bot.lastChange ? (
-                        <>{formatDate(bot.lastChange)}</>
+                      {bot.prefixesCreationTime ? (
+                        <div>{formatDate(bot.prefixesCreationTime)}</div>
                       ) : (
                         <>&ndash;</>
                       )}
                     </TableCell>
                     <TableCell className="text-right">
                       <Button variant="outline" asChild>
-                        <Link href={`/bots/${bot.detail.id}`}>
+                        <Link href={`/bots/${bot.id}`}>
                           <BookIcon />
                           Details
                         </Link>
                       </Button>
-                      {bot.detail.docs && (
+                      {bot.docs && (
                         <Button variant="outline" className="ml-2" asChild>
-                          <Link href={bot.detail.docs} target="_blank">
+                          <Link href={bot.docs} target="_blank">
                             <ExternalLinkIcon />
                             Docs
                           </Link>

@@ -6,32 +6,31 @@ import type {
 
 import Head from "next/head";
 
-import { getBotOverview, type BotOverviewItem } from "@/lib/storage";
+import { Bot, getBots } from "@/lib/github";
 
 import { Page } from "@/components/page";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatDate } from "@/lib/utils";
 
 export const getStaticPaths = (async () => {
   //
-  const botOverview = await getBotOverview();
+  const botOverview = await getBots();
   return {
     fallback: false,
     paths: botOverview.map((bot) => ({
       params: {
-        id: bot.detail.id,
+        id: bot.id,
       },
     })),
   };
 }) satisfies GetStaticPaths;
 
 export const getStaticProps: GetStaticProps<{
-  bot: BotOverviewItem;
+  bot: Bot;
 }> = async (context) => {
   //
-  const botOverview = await getBotOverview();
-  const bot = botOverview.find((b) => b.detail.id === context?.params?.id);
+  const botOverview = await getBots();
+  const bot = botOverview.find((b) => b.id === context?.params?.id);
   if (!bot) return { notFound: true };
   return { props: { bot }, revalidate: 3600 };
 };
@@ -42,25 +41,25 @@ export default function Home({
   return (
     <>
       <Head>
-        <title>{`${bot.detail.name} - bot signature tracker - bots.searchtheory.io`}</title>
+        <title>{`${bot.name} - bot signature tracker - bots.searchtheory.io`}</title>
       </Head>
       <Page>
         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight text-balance mt-6">
-          {bot.detail.name}
+          {bot.name}
         </h1>
         <p className="mt-3 mb-15 text-muted-foreground text-lg">
-          {bot.detail.description}
+          {bot.description}
         </p>
 
         <h2 className="scroll-m-20 mb-6 border-b pb-2 text-3xl font-semibold tracking-tight">
-          Variations ({bot.detail.variations.length})
+          Variations ({bot.variations.length})
         </h2>
-        {bot.detail.variations.map((variation) => (
+        {bot.variations.map((variation) => (
           <>
             <Card className="[&:not(:first-child)]:mt-6">
               <CardHeader>
                 <CardTitle>
-                  {bot.detail.name} - {variation.name}
+                  {bot.name} - {variation.name}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -85,14 +84,8 @@ export default function Home({
         <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight mt-12">
           IP Prefixes
         </h2>
-        {bot.lastFetch && (
-          <p className="mt-3 text-muted-foreground">
-            <>Prefixes fetched automatically at </>
-            <>{formatDate(bot.lastFetch.timestamp)}.</>
-          </p>
-        )}
         <pre className="mt-6 p-6 rounded-md border h-[300px] overflow-scroll bg-muted">
-          {bot.latestPrefixes.join("\n")}
+          {bot.prefixes.join("\n")}
         </pre>
       </Page>
     </>
