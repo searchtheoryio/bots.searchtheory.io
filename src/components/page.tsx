@@ -73,8 +73,9 @@ export const Page = ({ children }: PropsWithChildren) => {
             className="underline"
             href="https://www.linkedin.com/in/simon-thompson/"
           >
-            Simon Thompson
+            Simon
           </Link>
+          <>.</>
         </>
       </footer>
     </div>
