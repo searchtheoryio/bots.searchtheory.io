@@ -63,8 +63,19 @@ export const Page = ({ children }: PropsWithChildren) => {
         </NavigationMenu>
       </header>
       <main className="py-9">{children}</main>
-      <footer className="flex gap-6">
+      <footer>
         <>bots.searchtheory.io</>
+        <>&nbsp;/&nbsp;</>
+        <>
+          Maintained by
+          <>&nbsp;</>
+          <Link
+            className="underline"
+            href="https://www.linkedin.com/in/simon-thompson/"
+          >
+            Simon Thompson
+          </Link>
+        </>
       </footer>
     </div>
   );
