@@ -1,7 +1,11 @@
 import crypto from "crypto";
 import dayjs from "dayjs";
+import advancedFormat from "dayjs/plugin/advancedFormat";
+
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+
+dayjs.extend(advancedFormat);
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -9,7 +13,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export function formatDate(str: string) {
   const dateObj = dayjs(str);
-  return dateObj.format("MMM D @ HH:mm");
+  return dateObj.format("Do MMM YYYY");
 }
 
 /**
